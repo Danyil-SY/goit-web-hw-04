@@ -1,0 +1,4 @@
+python==3.12
+urllib3==1.26.16
+pathlib==1.0.1
+websockets==10.4
