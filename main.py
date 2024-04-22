@@ -10,7 +10,8 @@ import os
 
 
 class HttpHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
+    def do_GET(self) -> None:
+        """Handle HTTP GET requests."""
         pr_url = urllib.parse.urlparse(self.path)
         if pr_url.path == "/":
             self.send_html_file("index.html")
@@ -22,7 +23,8 @@ class HttpHandler(BaseHTTPRequestHandler):
             else:
                 self.send_html_file("error.html", 404)
 
-    def do_POST(self):
+    def do_POST(self) -> None:
+        """Handle HTTP POST requests."""
         data = self.rfile.read(int(self.headers["Content-Length"]))
 
         current_time = datetime.datetime.now()
@@ -52,14 +54,16 @@ class HttpHandler(BaseHTTPRequestHandler):
         self.send_header("Location", "/")
         self.end_headers()
 
-    def send_html_file(self, filename, status=200):
+    def send_html_file(self, filename: str, status: int = 200) -> None:
+        """Send an HTML file as the HTTP response."""
         self.send_response(status)
         self.send_header("Content-type", "text/html")
         self.end_headers()
         with open(filename, "rb") as fd:
             self.wfile.write(fd.read())
 
-    def send_static(self):
+    def send_static(self) -> None:
+        """Send static files as the HTTP response."""
         self.send_response(200)
         mt = mimetypes.guess_type(self.path)
         if mt:
@@ -71,13 +75,15 @@ class HttpHandler(BaseHTTPRequestHandler):
             self.wfile.write(file.read())
 
 
-def run_http_server(ip, port):
+def run_http_server(ip: str, port: int) -> None:
+    """Run an HTTP server."""
     server_address = (ip, port)
     httpd = HTTPServer(server_address, HttpHandler)
     httpd.serve_forever()
 
 
-def run_socket_server(ip, port):
+def run_socket_server(ip: str, port: int) -> None:
+    """Run a UDP socket server."""
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server = ip, port
     sock.bind(server)
